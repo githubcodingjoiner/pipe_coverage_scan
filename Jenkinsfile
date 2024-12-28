@@ -15,6 +15,7 @@ pipeline {
                 bat '''
                 set PATH=%PYTHON_PATH%;%PATH%
                 pip show coverage
+                pip install -r requirements.txt
                 '''
             }
         }
