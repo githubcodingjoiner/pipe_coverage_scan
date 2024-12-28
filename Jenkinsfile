@@ -26,7 +26,7 @@ pipeline {
                 echo "Running tests with coverage..."
                 coverage run --source=. test.py
                 coverage xml -o coverage.xml
-                if exist coverage.xml (
+                if exist "coverage.xml" (
                     echo "Coverage report generated successfully."
                 ) else (
                     echo "Error: Coverage report not found!"
@@ -48,7 +48,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             environment {
-                SONAR_TOKEN = credentials('sonarqube-token') // Accessing the SonarQube token stored in Jenkins credentials
+                SONAR_TOKEN = credentials('sonarqube-token') // Accessing the SonarQube token
             }
             steps {
                 bat '''
@@ -58,7 +58,8 @@ pipeline {
                               -Dsonar.sources=. ^
                               -Dsonar.python.coverage.reportPaths=coverage.xml ^
                               -Dsonar.host.url=http://localhost:9000 ^
-                              -Dsonar.token=%SONAR_TOKEN%
+                              -Dsonar.login=%SONAR_TOKEN% ^
+                              -Dsonar.projectVersion=1.0.0
                 '''
             }
         }
